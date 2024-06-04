@@ -27,6 +27,8 @@ jobs:
           key: ${{ runner.OS }}-npm-cache
           restore-keys: |
             ${{ runner.OS }}-npm-cache
+      - name: Setting SSL Strict Mode
+        run: npm config set strict--ssl false
       - name: Install Dependencies
         run: npm install
       - name: Build

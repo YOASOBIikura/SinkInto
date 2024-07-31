@@ -14,7 +14,8 @@ tags:
 `animation-duration` 指定动画变换的时间，负值无效(动画内属性)
 
 `animation-timing-function` 指定动画变换的效果，确定是线性过渡还是平滑过渡
-                            等模式(动画内属性)
+                            等模式(动画内属性)，其次该属性作用的是一个动画
+                            的关键帧周期而并不是动画周期
 
 `animation-direction` 动画执行的方向，方向是关键帧内部指定的属性同时也会反转
                       animation-timing-function属性

@@ -30,3 +30,5 @@ tags:
             `scale3d` 按照X、Y、Z轴设定的数值进行缩放
 
 `transform-style` 用于营造有层级的3d舞台，并且作用于子元素
+
+`backface-visibility` 用于设置元素背面是否显示

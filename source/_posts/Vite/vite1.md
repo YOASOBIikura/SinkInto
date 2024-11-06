@@ -59,3 +59,22 @@ const viteConfig = {
 如果是在客户端中，也就是普通的js脚本当中,可以直接从import.meta.env中获取环境变量
 其次vite还为我们做了一层拦截，为了区分普通变量和隐私变量，它会将VITE开头的环境变量送进import.meta.env中
 如果想要修改该前缀可以使用envPrefix进行修改，可以在vite.config.js中进行修改
+
+## 在vite中处理css
+
+vite天生就支持对css文件的直接处理
+
+1. vite在读取到main.js中引用到了Index.css
+2. 直接通过fs模块读取css文件中的内容
+3. 直接创建一个style标签，将index.css文件中的内容copy到style标签内部
+4. 将style标签插入到index.html的head中
+5. 将该css文件中的内容直接替换为js脚本(方便热更新或者css模块化)，同时设置content-type为js,让浏览器以js脚本的形式来执行该css文件
+
+## css模块化
+
+1. module.css (module是一种约定，表示需要开启css模块化)
+2. 他会将你的所有类名进行一定规则的替换(将footer替换为 _footer_i22st_1)
+3. 同时创建一个映射对象{footer: "_footer_i22st_1"}
+4. 将替换过后的内容塞进style标签中然后放入到head标签里面 (能够读到index.html的文件内容)
+5. 再将css文件中的内容抹除替换为js脚本
+6. 将创建的映射对象在脚本中进行默认导出

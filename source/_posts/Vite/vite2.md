@@ -8,7 +8,7 @@ tags:
 ---
 
 
-## modules篇
+## modules
 
 在vite.config.js中我们通过css属性去控制整个vite对于css的处理行为
 
@@ -21,3 +21,15 @@ tags:
 - hashPrefix: 生成的hash会根据你的类名去进行生成，如果想要生成的hash更加独特可以配置这个属性，该属性会参与到最终的hash生成 -> 一般默认设置
 
 - globalModulePaths: 配置不想进行css模块化的文件路径
+
+## preprocessorOptions
+
+可以在这个里面给css预处理器进行一些配置如less、sass等
+
+## sourceMap
+
+当代码文件被编译过后或者被压缩过后，这个时候假设程序报错，他将不会产生正确的错误位置信息，只有设置为true时，才会显示具体是在哪个文件的位置，设置后会有一个索引文件
+
+## postcss
+
+- postcss-preset-env: 可以开启一些预设的postcss插件

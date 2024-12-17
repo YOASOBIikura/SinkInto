@@ -16,12 +16,3 @@ type: "about"
 - 当你感觉要责怪的人和事越来越少时，说明你在 **<font color=chocolate>成熟</font>** 。
 - 当你在项目中不断获得了友谊和朋友时，说明你将取得项目的 **<font color=chocolate>成功</font>** 。
 
-
-## 联系我
-CSDN：<a href="https://chocolate.blog.csdn.net/">https://chocolate.blog.csdn.net/</a>（CSDN认证博客专家）
-
-微信公众号：小狮子前端Vue
-
-一个不是只会写业务代码的前端攻城狮会带给你怎样的体会呢？
-
-座右铭：学如逆水行舟，不进则退

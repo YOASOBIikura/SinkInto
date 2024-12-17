@@ -604,8 +604,8 @@ aside:
     enable: true
     description:
   card_announcement:
-    enable: true
-    content: blog-lionkkv2.0.0魔改版本，已经足以使用，更多内容教程请访问主站:yangchaoyi.vip，谢谢~<img src="https://cdn.jsdelivr.net/gh/lete114/CDN/Use/my_bg.gif">
+    enable: false
+    content: ""
   card_pixiv:
     enable: true
   card_calendar:

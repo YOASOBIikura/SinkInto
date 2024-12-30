@@ -37,7 +37,8 @@ JSX: javascript and xml(html) 把JS和HTML混合在一起
     root.render(
         <>...</>
     )
-3. 后期视图更新的时候需要经过一个DOM-DIFF的对比，计算出补丁包PATCH=>也就是两次视图差异的部分，然后再把PATCH补丁包进行渲染=>Page视图更新
+3. 基于root.render方法吧virtualDOM变为真实DOM对象，后期视图更新的时候需要经过一个DOM-DIFF的对比，计算出补丁包PATCH=>也就是两次视图差异的部分，然后再把PATCH补丁包进行渲染=>Page视图更新
+4. 浏览器渲染和绘制真实的DOM对象
 
 render函数在渲染的时候，如果type是:
 字符串: 创建一个标签

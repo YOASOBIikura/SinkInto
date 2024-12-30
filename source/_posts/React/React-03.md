@@ -87,3 +87,10 @@ state = {
 1. 触发componentWillReceiveProps周期函数: 接搜最新属性之前
 2. 触发shouldComponentUpdate周期函数
 之后就是组件内部更新的逻辑
+
+其中WILL的周期函数都是不安全的周期函数
+
+PureComponent和Component
+前者额会给类组件默认加一个shouldComponentUpdate周期函数
+  - 在此周期函数中它会与老的属性或者状态做一个浅比较
+  - 如果经过浅比较，发现属性或者状态并没有发生改变则返回false => 也就是不会继续更新组件；除非有变化才去更新

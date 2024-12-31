@@ -51,3 +51,38 @@ useEffect(()=>{
 useEffect是发生在浏览器绘制和渲染之后，而useLayoutEffect是发生在render方法已经创建出DOM对象之后执行的，然后再进行浏览器渲染真实的DOM，也就是真实DOM只渲染一次，不会出现内容/样式的闪烁。 
 - useLayoutEffect要优先于useEffect去执行
 - 在两者设置的callback中，依然可以获取DOM元素，因为真实的DOM对象已经创建了，区别是在于浏览器是否已经渲染
+
+
+## useRef
+通过Ref获取一个DOM对象
+```
+let Xxx = useRef(null)
+
+<... ref={Xxx}><.../>
+```
+ 1. 在每一次组件更新的时候再次执行useRef不会创建新的REF对象，而createRef在每一次组件更新的时候都会创建一个全新的REF对象处理，比较浪费性能
+
+ 
+ ## useImperativeHandle
+ 通过函数父子组件的React.forwardRef()返回子组件中的状态或者方法
+ ```
+ useImperativeHandle(ref, ()=>{
+  return {
+    ...,
+    func...
+  }
+ })
+ ```
+
+
+ ## useMemo
+`let Xxx = useMemo(()=>{}, [])`
+1. 第一次渲染的时候callback会执行，后期只有依赖发生改变才会去执行，把结果返回给变量
+2. useMemo具备缓存的效果，在依赖的状态值没有发生改变，callback没有触发的时候变量就是上一次计算出来的结果(类似于Vue中的Computed属性)
+
+
+## useCallback
+`const handle = useCallback(()=>{},[])`
+1. 组件后续每一次更新，判断依赖是否发生改变，如果改变则会重新创建新的函数堆，并赋值给变量属性；但如果依赖没有更新或者没有设置依赖，则组件更新不会继续创建新的函数出来，而是一直使用第一次创建的函数堆
+
+应用场景: 父组件嵌套子组件，父组件要把一个内部的函数，基于属性传递给子组件，此时传递的这个方法，我们基于useCallback处理一下会更好。函数组件通过React.memo来判断父组件传递的属性是否变化判断是否需要重新渲染子组件

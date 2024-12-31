@@ -16,7 +16,8 @@ tags:
 - 产生一个私有上下文
 - 把传递的Props传递进来
 - 对函数返回的JSX元素也就是虚拟DOM进行渲染
-- 对上下文的私有变量进行改变并不会去触发页面的重新渲染组件中内容不会改变了所以称为静态组件 
+- 对上下文的私有变量进行改变并不会去触发页面的重新渲染组件中内容不会改变了所以称为静态组件
+- 函数组件的每次更新，其内所定义的函数都会重新在堆内存中创建新的函数实例并且执行一遍 
 
 ### 渲染机制
 1. 基于babel-preset-react-app把调用的组件转换为createElement格式的方法
@@ -94,3 +95,25 @@ PureComponent和Component
 前者额会给类组件默认加一个shouldComponentUpdate周期函数
   - 在此周期函数中它会与老的属性或者状态做一个浅比较
   - 如果经过浅比较，发现属性或者状态并没有发生改变则返回false => 也就是不会继续更新组件；除非有变化才去更新
+
+
+## 组件渲染原则(深度优先)
+
+父组件第一次渲染
+
+父willMount => 父render => [子willMount => 子render => 子didMount] => 父didMount
+
+------
+
+父组件更新
+
+父shouldUpdate => 父willUpdate => 父render => [子willRecivePrps => 子shouldUpdate => 子render => 子didUpdate] => 父didUpdate
+
+特殊处理: 完全可以在子组件内部做优化处理，验证传递的属性值是否有变化，如果没有变化则禁之更新
+
+
+-------
+
+父组件释放
+
+父willUnmount => 父释放中[子willUnMount => 子释放] => 父释放

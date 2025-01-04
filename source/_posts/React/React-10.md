@@ -15,7 +15,7 @@ tags:
 这些方法的执行主要是让指定的组件进行更新，而一更新就可以获取最新的公共状态信息进行渲染!!
  2. 修改公共容器中的状态不能直接修改
     基于dispatch派发，通知reducer执行
-    在reducer中去实现状态的更新
+    在reducer中去实现状态的更新 => 1. 利于逻辑的复用 2. 利于维护和管理
 
 使用步骤
 1. 创建全局公共容器用来存储各组件需要的公共信息
@@ -50,3 +50,78 @@ store.dispatch({
 2. 在入口中，基于上下文对象，把store放入到上下文中；需要用到store的组件，从上下文中获取!!!
 3. 组件中基于store，完成公共状态的获取、任务的派发
 使用的公共状态组件，必须想store的事件池中加入让组件更新的办法；只有这样，才可以确保公共状态改变，可以让组件更新，才可以获取最新的状态进行绑定！！
+
+redux在设计上也存在一些不好的地方
+1. 我们基于的getState获取的是公共状态，是直接和redux中的公共状态共用相同的堆地址，这样导致
+可以拿到公共状态后直接进行修改，导致修改逻辑混乱不好维护
+2. 我们会吧让组件更新的方法，放在事件池中，让公共状态改变的时候会通知事件池中所有的方法执行
+。此操作在放置方法的时候没有办法去设置状态的依赖，后期不论修改的状态是不是组件所需要的，事件池中
+所有的方法都会执行，进而导致相关的组件进行更新！
+3. 所有reducer的合并，并不是真正意义上的代码层面上的合并，而是创建一个总的reducer出来每一次派发
+都是让总的reducer进行执行，这样就会导致每个模块的reuducer都会完整switch执行一遍，导致效率降低
+
+## redux的工程化开发
+1. 按照模块，把reducer进行单独管理，每个模块都有自己的reducer；最后，我们还要把所有的reducer进行合并，合并为一个然后赋值给创建的store
+各模块下reducer的模版:
+```
+const initial = {
+  ...
+}
+
+export default function XxxReducer(state = initial, action){
+  state = clone(state) // 深拷贝
+  switch(action.type){
+    ....
+  }
+  return state
+}
+```
+```
+export default const reducer = combineReducers(
+  {
+    xxx: XxxReducer
+  }
+)
+```
+2. 每一次dispatch派发的时候，都会去每个模块的reducer中找一遍，把所有和派发行为的标识匹配的逻辑执行一遍
+可能会有标识冲突的问题，所以我们派发的行为标识必须是唯一的，解决办法就是宏管理(统一管理标识问题)
+3. 创建actionCreator对象，按模块管理我们需要派发的行为对象，通过将各个reducer的dispatch方法进行封装成函数
+返回相应的dispatch对象最后进行集合导出
+```
+export default const xxxAction = {
+  fn1(){
+    return {
+      type: TYPE.XXX
+    }
+  },
+  fn2(){
+    return {
+      type: TYPE.YYY
+    }
+  }
+}
+```
+```
+export default action = {
+  xxx: xxxAction
+}
+```
+
+## react-redux 简化redux在组件中的应用
+1. 提供Provider组件，可以自己在内部创建上下文对象，把store放在根组件上下文中
+```
+<Provider store = {store}>
+  <XXX/>
+</Provider>
+```
+2. 提供的connect函数，在函数内部可以获取上下文中的store，然后快速的把公共状态以及dispatch
+操作基于属性传递给组件
+```
+connect(mapStateToProps, mapDispatchToProps)(渲染的组件)
+```
+```
+connect(state => state.XXX)(XXX)
+connect(null, action.XXX)(XXX)
+```
+
+

@@ -58,7 +58,7 @@ redux在设计上也存在一些不好的地方
 。此操作在放置方法的时候没有办法去设置状态的依赖，后期不论修改的状态是不是组件所需要的，事件池中
 所有的方法都会执行，进而导致相关的组件进行更新！
 3. 所有reducer的合并，并不是真正意义上的代码层面上的合并，而是创建一个总的reducer出来每一次派发
-都是让总的reducer进行执行，这样就会导致每个模块的reuducer都会完整switch执行一遍，导致效率降低
+都是让总的reducer进行执行，这样就会导 致每个模块的reuducer都会完整switch执行一遍，导致效率降低
 
 ## redux的工程化开发
 1. 按照模块，把reducer进行单独管理，每个模块都有自己的reducer；最后，我们还要把所有的reducer进行合并，合并为一个然后赋值给创建的store
@@ -125,3 +125,46 @@ connect(null, action.XXX)(XXX)
 ```
 
 
+## redux中间件
+- redux-logger 每一次派发，在控制台输出派发日志，方便对redux的操作进行调试！！
+(输出内容: 派发之前的状态、派发的行为、派发后的状态)
+- redux-thunk/redux-promise 实现异步派发(每一次派发的时候，需要传递给reducer
+的action对象中的内容，说是需要异步获取的)
+等等其他一系列的中间件
+
+加入中间件:
+```
+const store = createStore(
+  reducer,
+  applyMiddleware(reducerLogger) // 中间件
+) 
+
+export default store
+```
+
+redux-thunk 执行异步action
+```
+fn(){
+  return async (dispatch) => {
+    await delay();
+    dispatch( {
+      type: XXX
+    })
+  }
+}
+```
+1. 首先方法执行返回一个函数(也算是一个对象)， 内部给函数设置一个type属性，属性值
+不会和reducer中的逻辑进行匹配！！
+=> 第一次派发 type不会和reducer中的任何逻辑进行匹配，所以没有修改任何状态！
+2. 把返回的函数执行，把派发的方法dispatch传递给函数
+=> 接下来在函数中，完成异步操作，操作完成之后中间件自己再基于手动dispatch进行派发！
+总共会派发两次
+
+异步操作中间件还可以用redux-promise,只用在action方法前面加async即可更加方便
+1. 此dispatch也是被重写的，传递进来的是promise实例:
+- 没有type属性，但是不报错
+- 也不会通知reducer执行
+
+2. 但是他会监听执行方法的返回值(promise实例)等待实例为成功的时候，它内部会自动再派发一次任务
+- 用到的是store.dispatch派发(会通知reducer执行)
+- 把实例变为成功的结果(也就是标准的action对象)传递给reducer，实现状态的改变

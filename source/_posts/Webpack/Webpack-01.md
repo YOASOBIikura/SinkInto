@@ -29,6 +29,9 @@ webpack支持零配置打包：需要写任何配置使用默认配置进行打�
 ```
 const HtmlWebPackPlugin = require('html-webpack-plugin')
 const { CleanWebpackPlugin } = require('clean-webpack-plugin')
+const MiniCssExtractPlugin = require('mini-css-extract-plugin')
+const CssMinimizerWebpackPlugin = require('css-minimizer-webpack-plugin')
+const TerserPlugin = require('terser-webpack-plugin')
 
 module.exports = {
     // production生产环境，打包后JS会自动压缩
@@ -63,8 +66,101 @@ module.exports = {
             chunks: ["index"]
         }),
         // 删除之前打包的文件
-        new CleanWebpackPlugin()
-    ]
+        new CleanWebpackPlugin(),
+        new MiniCssExtractPlugin(
+            // 打包后css文件的名字
+            filename: 'main.[hash:8].css'
+        ),
+    ],
+    // dev-server
+    devServer: {
+        host: '127.0.0.1',
+        port: 3000,
+        open: true, // 自动开发浏览器
+        hot: true, // 热更新
+        compress: true, // 开启服务器端的GZIP压缩
+        // 跨域代理配置
+        proxy: {
+           "/Xxx": {
+                target: "", // 代理的真正的服务器地址
+                pathRewritr: { // 地址重写 因为真正的地址是没有/XXX字符串的
+                    "^/Xxx": ""
+                },
+                changeOrigin: true, // 修改请求头中的origin信息
+                ws: true, // 支持websoket通信机制
+           } 
+        } 
+    },
+    // loader加载器 顺序 从上到下 从右到左
+    module: {
+        rules: [{
+            test:  /\(.css|less)$/, // 给予正则匹配那些文件需要处理
+            use: [
+                MiniCssExtractPlugin.loader, //抽离css代码
+                "style-loader", // 把css以内嵌式导入到页面
+                "css-loader", // 处理特殊语法
+                {
+                    loader: "postcss-loader",
+                    options: {
+                        postcssOptions: {
+                            plugins: {
+                                require("autoprefixer")
+                            }
+                        }
+                    }
+                }, // 配合autoprefixer&browserlist给css3属性设置前缀
+                "less-loader", // 把less编译为css
+            ],
+        },{
+            test: '/\.js$/',
+            use:[
+                "babel-loader"
+            ],
+            // 设置编译时忽略的文件和指定的编译目录
+            include: path.resolve(__dirname, 'src')
+            exclude: /node_modules/
+        },{
+            test: /\.(png|jpe?g|gif)$/i,
+            type: 'javascript/auto', // webpack5 需要
+            use: [{
+                loader: 'url-loader',
+                options: {
+                    // 把指定大小内的图片转换为base64(小于200Kb则需要Base64)
+                    limit: 200 * 1024,
+                    esModule: true,
+                    // 编译后没有base64的图片，编译输出的路径和名称
+                    name: 'images/[name].[hash].[ext]'
+                }
+            }]
+        }]
+    },
+    // 设置打包的最大资源大小
+    performance: {
+        maxAssetSize: 100 * 1024 * 1024,
+        maxEntrypointSize: 100 * 1024 *1024
+    }
+    // 优化项
+    optimization: {
+        // 设置压缩方式
+        new CssMinimizerWebpackPlugin()
+        new TerserPlugin()
+    },
+    // 解析器
+    resolve: {
+        // 别名
+        alias: {
+            '@': path.resolve(__dirname, './src')
+        }
+    }
 }
 ```
+
+webpack-dev-server 项目开发流程
+1. 基于Node在客户端本地启动一个web服务器，帮助开发者预览开发作品
+2. 项目打包后放在虚拟内存中
+3. 启动web服务器从虚拟内存中获取打包的内容进行实时预览
+4. 热更新(代码修改后会实时进行打包编译自动刷新浏览器，渲染最新的效果)
+5. 启动web服务器，可以作为数据跨域请求的代理服务器，也就是可以实现Proxy跨域代理
+
+
 

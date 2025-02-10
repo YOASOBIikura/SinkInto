@@ -60,7 +60,7 @@ let Xxx = useRef(null)
 
 <... ref={Xxx}><.../>
 ```
- 1. 在每一次组件更新的时候再次执行useRef不会创建新的REF对象，而createRef在每一次组件更新的时候都会创建一个全新的REF对象处理，比较浪费性能
+ 1. 在每一次组件更新的时候再次执行useRef不会创建新的REF对象，而createRef在每一次组件更新的时候都会创建一个全新的REF对象处理，比较浪费性能。所以useRef会比createRef更好一点
 
  
  ## useImperativeHandle

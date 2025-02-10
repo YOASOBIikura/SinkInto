@@ -50,11 +50,11 @@ tags:
 `hdNode.derivePath(path) => HDNode`
 返回新的HDnode，并通过派生的path找到子节点
 
-`ethers.utils.mnemonicToSeed(phrase, password) => string`
+`ethers.utils.mnemonicToSeed(phrase) => string`
 将助记词转换位种子
 
-`ethers.utils.mnemonicToEntropy(phrase, wordlist) => string`
+`ethers.utils.mnemonicToEntropy(phrase) => string`
 将助记词转换成熵
 
-`ethers.utils.isValidMnemonic(phrase, wordlist) => boolean`
+`ethers.utils.isValidMnemonic(phrase) => boolean`
 判断是否是有效的助记词短语

@@ -15,7 +15,9 @@ const app = dva({
     // 指定路由模式，默认是哈希路由
     history: createHistory(),
     // 扩展其他的中间件 redux-logger/redux-persist.....
-    extraEnhancers: []
+    extraEnhancers: [],
+    // 在每一次派发中进行拦截
+    onAction: []
 })
 
 // Plugins
@@ -72,7 +74,7 @@ routerRedux是react-router-redux中提供的对象，此对象中包含了路由
         routerRedux.push(...)
     )
 
-在真是项目中Model的处理
+在真实项目中Model的处理
 1. 所有模块的Model, 我们一般都放在src/models目录下
 2. 关于Model的加载问题
     a: 全部打包到主JS，页面一加载就把Models都准备好

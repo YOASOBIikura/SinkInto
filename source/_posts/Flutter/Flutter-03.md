@@ -12,11 +12,11 @@ tags:
 
 builder 的主要作用可以概括为以下几点：
 
-延迟构建 (Lazy Building): builder 允许你定义 Widget 的构建逻辑，但实际的构建过程只有在父 Widget 认为需要时才会发生。这对于构建大型列表、选项卡视图或其他可能包含大量 Widget 的场景非常有用，因为只有当前可见或即将显示的 Widget 才会被构建，从而节省了资源并提高了应用的启动速度和响应性。
+延迟构建 (Lazy Building): builder 允许你定义 Widget 的构建逻辑，但实际的构建过程只有在父Widget认为需要时才会发生。这对于构建大型列表、选项卡视图或其他可能包含大量 Widget 的场景非常有用，因为只有当前可见或即将显示的Widget才会被构建，从而节省了资源并提高了应用的启动速度和响应性。
 
-提供构建上下文 (BuildContext): builder 函数接收一个 BuildContext 对象作为参数。这个 BuildContext 包含了 Widget 在 Widget 树中的位置信息，允许你在构建 Widget 时访问主题 (Theme)、媒体查询 (MediaQuery) 等上下文相关的信息。
+提供构建上下文(BuildContext): builder函数接收一个BuildContext 对象作为参数。这个 BuildContext 包含了 Widget 在 Widget 树中的位置信息，允许你在构建 Widget 时访问主题 (Theme)、媒体查询 (MediaQuery) 等上下文相关的信息。
 
-处理动态数据: 当 Widget 的内容依赖于动态数据时，可以使用 builder 在数据更新时重新构建相关的 Widget 部分。例如，FutureBuilder 和 StreamBuilder 都使用 builder 来根据异步操作的状态动态构建 UI。
+处理动态数据: 当Widget的内容依赖于动态数据时，可以使用builder在数据更新时重新构建相关的Widget部分。例如，FutureBuilder和StreamBuilder都使用builder来根据异步操作的状态动态构建UI。
 
 构建具有特定上下文依赖的 Widget: 有些 Widget 的构建逻辑需要依赖于其在 Widget 树中的特定位置或状态。builder 提供了一个方便的方式来访问这些信息并据此构建 Widget。
 

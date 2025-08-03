@@ -35,3 +35,10 @@ function reactive(target){
 ```
 
 第二点找到对应的数据对应的函数，实际上就是依赖搜集
+
+
+# WeakMap Map的区别
+
+1. WeakMap的键只能是对象，但是Map的键可以示任意类型
+2. Map的键是强引用，而WeakMap的键是弱引用如果没有依赖则会被垃圾回收掉
+3. Map是可以迭代的，但是WeakMap不行

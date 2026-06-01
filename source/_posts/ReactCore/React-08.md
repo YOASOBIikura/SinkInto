@@ -7,7 +7,7 @@ tags:
   - Fiber双缓存
 ---
 
-# 第 9 讲：Fiber 双缓存、alternate 和 current 切换
+# 第 8讲：Fiber 双缓存、alternate 和 current 切换
 
 核心文件：
 
